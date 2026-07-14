@@ -8,14 +8,14 @@ Full-stack app to manage seat allocation for ~5,000 employees across projects, f
 
 ## Live Links
 
-> Fill these in after deploying (see [Deployment](#deployment)).
-
 | Item | URL |
 |------|-----|
-| Frontend | `https://<your-app>.vercel.app` |
-| Backend API | `https://<your-api>.onrender.com` |
-| API docs (Swagger) | `https://<your-api>.onrender.com/docs` |
-| GitHub repo | `https://github.com/<you>/ethara-seat-allocation` |
+| **Frontend** | https://ethara-seat-allocation-three.vercel.app |
+| **Backend API** | https://ethara-api-u7r4.onrender.com |
+| **API docs (Swagger)** | https://ethara-api-u7r4.onrender.com/docs |
+| **GitHub repo** | https://github.com/ahtesham6562/ethara-seat-allocation |
+
+> **Note:** the backend runs on Render's free tier, which sleeps after ~15 minutes of inactivity. The first request after idling takes ~30–50s to cold-start; subsequent requests are fast.
 
 ### Sample login credentials
 
