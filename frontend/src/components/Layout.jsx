@@ -1,11 +1,11 @@
 import { NavLink, Outlet, useNavigate } from "react-router-dom";
 import { useAuth } from "../auth.jsx";
+import ChatWidget from "./ChatWidget.jsx";
 
 const links = [
   { to: "/", label: "Dashboard", end: true },
   { to: "/employees", label: "Employees" },
   { to: "/seats", label: "Seats" },
-  { to: "/assistant", label: "AI Assistant" },
 ];
 
 export default function Layout() {
@@ -69,6 +69,9 @@ export default function Layout() {
       <main className="flex-1 max-w-7xl w-full mx-auto px-4 py-6">
         <Outlet />
       </main>
+
+      {/* AI assistant: floating popup, available on every page */}
+      <ChatWidget />
     </div>
   );
 }
