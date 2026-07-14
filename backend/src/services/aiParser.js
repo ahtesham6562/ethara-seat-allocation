@@ -135,7 +135,7 @@ async function findEmployee({ email, query }) {
     const byEmail = await Employee.findOne({ email }).populate("project", "name");
     if (byEmail) return byEmail;
   }
-  // Try to pull a capitalized name token from the query
+  // Try an explicit capitalized / "employee X" name first
   const nameGuess = extractName(query);
   if (nameGuess) {
     const byName = await Employee.findOne({
@@ -143,7 +143,28 @@ async function findEmployee({ email, query }) {
     }).populate("project", "name");
     if (byName) return byName;
   }
+  // Fallback: try each remaining word token (handles lowercase "amit").
+  // Each candidate is validated against the DB, so junk tokens simply miss.
+  for (const token of nameTokens(query)) {
+    const hit = await Employee.findOne({
+      name: { $regex: `\\b${token}`, $options: "i" },
+    }).populate("project", "name");
+    if (hit) return hit;
+  }
   return null;
+}
+
+// Word tokens worth trying as a first name (>=3 letters, not a stopword)
+const STOP_WORDS = new Set([
+  "where","which","show","who","how","many","seat","seats","seated","sitting",
+  "desk","project","floor","zone","the","and","for","are","him","her","his",
+  "she","assigned","allocated","available","occupied","tell","can","you","what",
+  "whats","is","at","on","in","of","my","me","near","team","hes","she's","this",
+]);
+function nameTokens(query) {
+  return (query.match(/[A-Za-z]{3,}/g) || [])
+    .map((w) => w.toLowerCase())
+    .filter((w) => !STOP_WORDS.has(w));
 }
 
 function extractName(query) {
