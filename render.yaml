@@ -1,0 +1,24 @@
+# Render blueprint for the backend API.
+# In Render: New -> Blueprint -> point at this repo. Set the secret env vars below.
+services:
+  - type: web
+    name: ethara-api
+    runtime: node
+    rootDir: backend
+    plan: free
+    buildCommand: npm install
+    startCommand: npm start
+    healthCheckPath: /health
+    envVars:
+      - key: MONGODB_URI
+        sync: false # set to your MongoDB Atlas connection string
+      - key: JWT_SECRET
+        generateValue: true
+      - key: JWT_EXPIRES
+        value: 7d
+      - key: CLIENT_ORIGIN
+        sync: false # set to your Vercel frontend URL, e.g. https://ethara.vercel.app
+      - key: GROQ_API_KEY
+        sync: false # optional; blank = rule-based assistant
+      - key: GROQ_MODEL
+        value: llama-3.3-70b-versatile

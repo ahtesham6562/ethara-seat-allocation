@@ -1,0 +1,29 @@
+# Local full-stack demo: MongoDB + backend API.
+# Run:  docker compose up --build
+# Then seed once:  docker compose exec api npm run seed
+# Frontend: run `npm run dev` in ./frontend (or build & serve dist separately).
+services:
+  mongo:
+    image: mongo:7
+    ports:
+      - "27017:27017"
+    volumes:
+      - mongo_data:/data/db
+
+  api:
+    build: ./backend
+    ports:
+      - "5000:5000"
+    environment:
+      MONGODB_URI: mongodb://mongo:27017/ethara
+      PORT: "5000"
+      JWT_SECRET: docker_demo_secret_change_me
+      JWT_EXPIRES: 7d
+      CLIENT_ORIGIN: "*"
+      GROQ_API_KEY: ""
+      GROQ_MODEL: llama-3.3-70b-versatile
+    depends_on:
+      - mongo
+
+volumes:
+  mongo_data:
