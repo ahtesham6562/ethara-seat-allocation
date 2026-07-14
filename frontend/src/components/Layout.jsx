@@ -137,7 +137,8 @@ export default function Layout() {
           <span className="font-bold text-brand-600">Ethara Seats</span>
         </div>
 
-        <main className="max-w-7xl mx-auto px-4 py-6">
+        {/* pb-28 keeps page content (e.g. pagination) clear of the floating chat button */}
+        <main className="max-w-7xl mx-auto px-4 pt-6 pb-28">
           <Outlet />
         </main>
       </div>

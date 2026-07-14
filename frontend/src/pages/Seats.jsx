@@ -90,7 +90,7 @@ export default function Seats() {
         </table>
       </div>
 
-      <div className="flex items-center justify-between text-sm">
+      <div className="flex items-center justify-between text-sm pr-24">
         <span className="text-gray-500">Page {data.page} of {data.pages}</span>
         <div className="flex gap-2">
           <button className="btn-ghost" disabled={page <= 1} onClick={() => load(page - 1)}>Prev</button>

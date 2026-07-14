@@ -184,8 +184,8 @@ export default function Employees() {
         </table>
       </div>
 
-      {/* Pagination */}
-      <div className="flex items-center justify-between text-sm">
+      {/* Pagination (pr-24 keeps Next clear of the floating chat button) */}
+      <div className="flex items-center justify-between text-sm pr-24">
         <span className="text-gray-500">
           Page {data.page} of {data.pages}
         </span>
