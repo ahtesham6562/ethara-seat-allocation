@@ -48,6 +48,44 @@ export async function answerQuery(rawQuery) {
     };
   }
 
+  // Intent: count / find employees by name ("how many Aditya Bhat", "find John")
+  if (!email && /(how many|how much|number of|count|find|search|list|are there|is there)/.test(lower)) {
+    const tokens = nameTokens(query);
+    if (tokens.length) {
+      const nameQuery = {
+        $and: tokens.map((t) => ({ name: { $regex: `\\b${t}`, $options: "i" } })),
+      };
+      const matches = await Employee.find(nameQuery)
+        .populate("project", "name")
+        .limit(25);
+      const total = await Employee.countDocuments(nameQuery);
+      const label = tokens.join(" ");
+      if (total === 0) {
+        return {
+          intent: "count_employees",
+          answer: `No employees found matching "${label}".`,
+          data: { name: label, count: 0, matches: [] },
+        };
+      }
+      const list = matches.map((e) => ({
+        name: e.name,
+        employee_code: e.employee_code,
+        email: e.email,
+        project: e.project?.name || "unassigned",
+        seat_allocation_status: e.seat_allocation_status,
+      }));
+      return {
+        intent: "count_employees",
+        answer:
+          `Found ${total} employee${total > 1 ? "s" : ""} matching "${label}"` +
+          (total <= 5
+            ? `: ${list.map((e) => `${e.name} (${e.employee_code}, ${e.project})`).join("; ")}.`
+            : `. Showing first ${list.length}.`),
+        data: { name: label, count: total, matches: list },
+      };
+    }
+  }
+
   // Intent: locate an employee (by email or name) -> "where is my seat / where is X seated"
   if (/(where|seat|sitting|located|desk)/.test(lower) || email) {
     const employee = await findEmployee({ email, query });
@@ -156,10 +194,12 @@ async function findEmployee({ email, query }) {
 
 // Word tokens worth trying as a first name (>=3 letters, not a stopword)
 const STOP_WORDS = new Set([
-  "where","which","show","who","how","many","seat","seats","seated","sitting",
+  "where","which","show","who","how","many","much","seat","seats","seated","sitting",
   "desk","project","floor","zone","the","and","for","are","him","her","his",
   "she","assigned","allocated","available","occupied","tell","can","you","what",
   "whats","is","at","on","in","of","my","me","near","team","hes","she's","this",
+  "there","find","search","list","number","count","any","all","does","has","have",
+  "matching","named","name","employee","employees","people","person","with",
 ]);
 function nameTokens(query) {
   return (query.match(/[A-Za-z]{3,}/g) || [])
