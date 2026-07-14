@@ -46,14 +46,40 @@ export default function ChatWidget() {
   return (
     <>
       {/* Floating toggle button */}
-      <button
-        onClick={() => setOpen((o) => !o)}
-        className="fixed bottom-6 right-6 z-40 h-14 w-14 rounded-full bg-brand-500 text-white shadow-lg hover:bg-brand-600 flex items-center justify-center text-2xl transition"
-        aria-label="AI Assistant"
-        title="AI Assistant"
-      >
-        {open ? "×" : "💬"}
-      </button>
+      <div className="fixed bottom-7 right-7 z-40 group">
+        {/* Hover label */}
+        {!open && (
+          <span className="absolute right-full top-1/2 -translate-y-1/2 mr-3 whitespace-nowrap rounded-lg bg-gray-900 px-3 py-1.5 text-sm font-medium text-white opacity-0 shadow-lg transition-opacity duration-200 group-hover:opacity-100 pointer-events-none">
+            Ask AI Assistant
+          </span>
+        )}
+
+        <button
+          onClick={() => setOpen((o) => !o)}
+          className="relative h-[68px] w-[68px] rounded-full bg-gradient-to-br from-brand-500 via-indigo-500 to-purple-600 text-white shadow-xl shadow-brand-500/40 flex items-center justify-center transition-transform duration-200 hover:scale-110 active:scale-95 focus:outline-none focus:ring-4 focus:ring-brand-500/30"
+          aria-label="AI Assistant"
+        >
+          {/* Pulse ring (only when closed) */}
+          {!open && (
+            <span className="absolute inset-0 rounded-full bg-brand-500 opacity-60 animate-ping" />
+          )}
+
+          <span className="relative">
+            {open ? (
+              // Close icon
+              <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round">
+                <path d="M6 6l12 12M18 6L6 18" />
+              </svg>
+            ) : (
+              // Chat + sparkle icon
+              <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
+                <path d="M20 11.5a7.5 7.5 0 0 1-10.9 6.7L4 19.5l1.4-4.1A7.5 7.5 0 1 1 20 11.5z" />
+                <path d="M12.2 7.6l.8 1.9 1.9.8-1.9.8-.8 1.9-.8-1.9-1.9-.8 1.9-.8.8-1.9z" fill="currentColor" stroke="none" />
+              </svg>
+            )}
+          </span>
+        </button>
+      </div>
 
       {/* Backdrop (mobile) */}
       {open && (
@@ -69,10 +95,17 @@ export default function ChatWidget() {
           open ? "translate-x-0" : "translate-x-full"
         }`}
       >
-        <div className="h-16 px-4 flex items-center justify-between border-b bg-brand-500 text-white">
-          <div>
-            <div className="font-semibold">AI Assistant</div>
-            <div className="text-xs opacity-80">Ethara Seats</div>
+        <div className="h-16 px-4 flex items-center justify-between bg-gradient-to-r from-brand-500 via-indigo-500 to-purple-600 text-white">
+          <div className="flex items-center gap-2.5">
+            <span className="h-9 w-9 rounded-full bg-white/20 flex items-center justify-center">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
+                <path d="M20 11.5a7.5 7.5 0 0 1-10.9 6.7L4 19.5l1.4-4.1A7.5 7.5 0 1 1 20 11.5z" />
+              </svg>
+            </span>
+            <div>
+              <div className="font-semibold leading-tight">AI Assistant</div>
+              <div className="text-xs opacity-80 leading-tight">Ethara Seats</div>
+            </div>
           </div>
           <button
             onClick={() => setOpen(false)}
